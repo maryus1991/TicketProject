@@ -6,6 +6,8 @@ from random import randint
 from utils.send_otp import send_otp
 from .managers import UserManager
 from config.settings import OTP_EXPIRATIONS_MINUTES
+from rest_framework.authtoken.models import Token
+
 # Create your models here.
 
 class GenderOfPassengers(models.TextChoices):
@@ -48,13 +50,14 @@ class User(AbstractUser):
 
         return self.otp
 
-    def verify_otp(self, otp: str) -> bool:
+    def verify_otp(self, otp: str) -> list:
 
         if (int(self.otp) == int(otp)) and (self.otp_expiry_date >= now()):
             self.otp = ""
             self.otp_expiry_date = None
             self.login_request = False
             self.save()
-            return True
-        else:
-            return False
+            token = Token.objects.get_or_create(user_id=self.id)[0]
+            return [200, token.key]
+        elif (int(self.otp) != int(otp)) and (self.otp_expiry_date >= now()): return [401, 'otp code is wrong']
+        elif (int(self.otp) == int(otp)) and (self.otp_expiry_date < now()): return [402, 'otp code has been expired']

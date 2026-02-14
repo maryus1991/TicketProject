@@ -7,7 +7,7 @@ from kavenegar import KavenegarAPI
 def send_otp(number, otp):
     try:
         api = KavenegarAPI(settings.KAVEH_NEGAR_OTP)
-        params = {
+        params = { 
             'receptor': number,
             'template': 'main',
             'token': str(otp),
