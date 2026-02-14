@@ -21,15 +21,14 @@ class User(AbstractUser):
      User model
     """
     
-    gender = models.CharField(max_length=255, choices=GenderOfPassengers, verbose_name="")
-    PhoneNumber = PhoneNumberField(unique=True, db_index=True, verbose_name="")
-    otp = models.CharField(max_length=6, blank=True, null=True, verbose_name="")
-    otp_expiry_date = models.DateTimeField(null=True, blank=True, verbose_name="")
+    gender = models.CharField(max_length=255, choices=GenderOfPassengers, verbose_name="جنسیت")
+    PhoneNumber = PhoneNumberField(unique=True, db_index=True, verbose_name="شماره")
+    otp = models.CharField(max_length=6, blank=True, null=True, verbose_name="کد otp")
+    otp_expiry_date = models.DateTimeField(null=True, blank=True, verbose_name="تاریخ انقضای ")
 
-    is_active = models.BooleanField(default=True)
-    is_verified = models.BooleanField(default=True)
-
-    created_at = models.DateTimeField(auto_now_add=True)
+    is_active = models.BooleanField(default=True, verbose_name='فعال بودن')
+    is_verified = models.BooleanField(default=True, verbose_name='تایید اطلاعات')
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='زمان ثبت نام')
     
     USERNAME_FIELD = "PhoneNumber"
     EMAIL_FIELD = "PhoneNumber"
@@ -37,7 +36,7 @@ class User(AbstractUser):
     objects = UserManager()
 
     def __str__(self):
-        return f"{self.PhoneNumber.replace(' ', '')}"
+        return f"{str(self.PhoneNumber).replace(' ', '')}"
     
     def set_otp(self) -> int:
  

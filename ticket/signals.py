@@ -5,8 +5,9 @@ from .models import Ticket, PassengerPlacement
 
 @receiver(post_save, sender=Ticket)
 def create_passenger_placement(sender, instance, created, **kwargs):
+    print(123)
     if created :
-        for _ in instance.count_ofـpassengers:
+        for _ in range(instance.count_ofـpassengers ):
             PassengerPlacement.objects.create(
                 ticket=instance,
                 is_free=True,
