@@ -5,7 +5,7 @@ from django.utils.timezone import timedelta, now
 from random import randint
 from utils.send_otp import send_otp
 from .managers import UserManager
-
+from config.settings import OTP_EXPIRATIONS_MINUTES
 # Create your models here.
 
 class GenderOfPassengers(models.TextChoices):
@@ -28,6 +28,7 @@ class User(AbstractUser):
 
     is_active = models.BooleanField(default=True, verbose_name='فعال بودن')
     is_verified = models.BooleanField(default=True, verbose_name='تایید اطلاعات')
+    login_request = models.BooleanField(default=False, verbose_name='درخواست لاگین')
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='زمان ثبت نام')
     
     USERNAME_FIELD = "PhoneNumber"
@@ -40,17 +41,10 @@ class User(AbstractUser):
     
     def set_otp(self) -> int:
  
-        self.otp_expiry_date = now() + timedelta(minutes=2)
+        self.otp_expiry_date = now() + timedelta(minutes=int(OTP_EXPIRATIONS_MINUTES))
         self.otp = randint(100000, 999999)
+        self.login_request = True
         self.save()
-
-        try:
-            send_otp.delay(
-                str(self.PhoneNumber).replace(" ", ""),
-                self.otp
-            )
-        except Exception as e:
-            print(self.__class__.__name__, e)
 
         return self.otp
 
@@ -59,6 +53,7 @@ class User(AbstractUser):
         if (int(self.otp) == int(otp)) and (self.otp_expiry_date >= now()):
             self.otp = ""
             self.otp_expiry_date = None
+            self.login_request = False
             self.save()
             return True
         else:

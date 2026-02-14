@@ -30,6 +30,7 @@ class UserManager(DjangoUserManager):
             validate_phone_number(phone_number)
             user = self.model(PhoneNumber=phone_number, **extra_fields)
             user.set_password(password)
+            user.login_request = True
             user.save(using=self._db)
             return user
 

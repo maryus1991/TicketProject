@@ -11,23 +11,28 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
 from pathlib import Path
-from dotenv import dotenv_values
+from dotenv import load_dotenv
+import os
+ 
 
-config = dotenv_values(".envs")
+BASE_DIR = Path(__file__).resolve().parent.parent
+local_env_file = os.path.join(BASE_DIR, ".envs")
+
+if os.path.isfile(local_env_file):
+    load_dotenv(dotenv_path=local_env_file)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-fe#gt@uakt9n=ecwnu5xem@x65#qcl8=w4dx@-wvuh-c(h+bq!'
+SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', default='test')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = bool(os.getenv('DJANGO_DEBUG'))
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = os.getenv('DJANGO_ALLOWED_HOSTS').split('-') 
 
 
 # Application definition
@@ -87,6 +92,19 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
+ 
+ 
+# DATABASES = {
+#     "default": {
+#         "ENGINE": os.getenv("POSTGRES_ENGIN"),
+#         "NAME": os.getenv("POSTGRES_DB"),
+#         "USER": os.getenv("POSTGRES_USER"),
+#         "PASSWORD": os.getenv("POSTGRES_PASSWORD"),
+#         "HOST": os.getenv("POSTGRES_HOST", default="postgres"),
+#         "PORT": os.getenv("POSTGRES_PORT", default="5432"),
+#     }
+# }
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -117,16 +135,35 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/6.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
-
-USE_I18N = True
-
-USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = "/static/"
+STATIC_ROOT = BASE_DIR / "static"
+
+MEDIA_URL = "/media/"
+MEDIA_ROOT = BASE_DIR / "media"
+
+LANGUAGE_CODE = "fa"
+USE_I18N = True
+TIME_ZONE = "Asia/Tehran"
+USE_TZ = True
+
+# otp 
+KAVEH_NEGAR_OTP = os.getenv('KAVEH_NEGAR_OTP')
+OTP_EXPIRATIONS_MINUTES = int(os.getenv('OTP_EXPIRATIONS_MINUTES', default=2))
+
+
+# phone number config
+PHONENUMBER_DEFAULT_FORMAT = "NATIONAL"
+PHONENUMBER_DEFAULT_REGION = "IR"
+
+
+# zrinpal payment
+MERCHANT_ID = os.getenv("ZARINPAL_MERCHANT_ID")
+ZARINPAL_SEND_DATA_URL = os.getenv("ZARINPAL_SEND_DATA_URL")
+ZARINPAL_REDIRECT_USER_TO_PAYMENT_PAGE = os.getenv("ZARINPAL_REDIRECT_USER_TO_PAYMENT_PAGE")
+ZARINPAL_VERIFY_PAYMENT = os.getenv("ZARINPAL_VERIFY_PAYMENT")
