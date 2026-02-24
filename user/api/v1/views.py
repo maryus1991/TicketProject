@@ -1,10 +1,18 @@
-from rest_framework.generics import GenericAPIView
+from rest_framework.generics import GenericAPIView, UpdateAPIView
 from user.models import User
 from rest_framework import status, response
-from .serializers import PhoneNumberSerializer, OTPSerializer, CustomTokenSerializer
+from .serializers import ( 
+    PhoneNumberSerializer, 
+    OTPSerializer,
+    CustomTokenSerializer, 
+    UserInformationSerializer, 
+    UserAllInformationSerializer,
+    PhoneNumberSerializer2, PasswordSerializer)
 from django.utils.crypto import get_random_string
 from django.db.transaction import atomic
 from rest_framework.authtoken.models import Token
+from rest_framework.permissions import IsAuthenticated
+
 
 
 class AuthViewLogin(GenericAPIView):
@@ -133,4 +141,72 @@ class AuthViewValidate(GenericAPIView):
             return response.Response(error, status=status.HTTP_400_BAD_REQUEST)
 
 
+class UpdateUserPhoneNumber(GenericAPIView):
+    """
+    for update user Phone Number
+
+    """
     
+    serializer_class = PhoneNumberSerializer2
+    permission_classes = [IsAuthenticated]
+
+    def put(self, request, *args, **kwargs):
+        data = PhoneNumberSerializer2(data=request.data)
+        data.is_valid(raise_exception=True)
+        PhoneNumber = data.validated_data.get('PhoneNumber')
+
+        user = request.user
+
+        user.PhoneNumber = PhoneNumber
+        user.is_verified = False
+        user.login_request = True
+        user.save()
+
+        user.set_otp()
+
+        request.user.auth_token.delete()
+        return response.Response('the phone number change successfully and the user should login and verify the new number', status=status.HTTP_202_ACCEPTED)
+
+
+class UpdateUserInformations(UpdateAPIView):
+    """
+    for edit user name and last name 
+
+    """
+    serializer_class = UserInformationSerializer
+    permission_classes = [IsAuthenticated]
+
+
+class GetAuthenticatedUserInformations(GenericAPIView):
+    '''
+    get the authenticated user infos
+    '''
+    serializer_class = UserAllInformationSerializer
+
+    def get(self, request, *args, **kwargs):
+        return response.Response(UserAllInformationSerializer(request.user).data, status=status.HTTP_200_OK)
+
+
+class ChangePasswordAuthenticatedUser(GenericAPIView):
+    '''
+    change the password of  authenticated user 
+    '''
+    serializer_class = PasswordSerializer
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        password = self.serializer_class(data=request.data)
+        password.is_valid(raise_exception=True)
+        user:User = request.user
+        password = password.validated_data.get('password')
+        print(password)
+        user.set_password(password)
+        user.save()
+
+        return response.Response('the password has been changed', status=status.HTTP_200_OK)
+
+    
+
+        
+
+

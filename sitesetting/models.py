@@ -1,7 +1,6 @@
 from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
 from easy_thumbnails.fields import ThumbnailerImageField
-
 from django.utils.crypto import get_random_string
 import os
 
@@ -50,6 +49,8 @@ class Team(models.Model):
     phone_number = PhoneNumberField(verbose_name='شماره تلفن ')
     email =  models.EmailField(max_length=255, verbose_name='ایمیل')
     link =  models.URLField(verbose_name='لینک')
+    is_active = models.BooleanField(default=True, verbose_name='پاسخ داده شده')
+
     
     class Meta:
         verbose_name = 'تیم'

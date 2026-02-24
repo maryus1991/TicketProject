@@ -9,12 +9,49 @@ class PhoneNumberSerializer(serializers.Serializer):
     """
 
     PhoneNumber = PhoneNumberField()
+
     gender = serializers.ChoiceField(
         choices=[
             ('M', 'مذکر'),
             ('F', 'مونث'),
         ]
     )
+
+class PhoneNumberSerializer2(serializers.Serializer):
+    """
+    serializer for User PhoneNumber
+    """
+
+    PhoneNumber = PhoneNumberField()
+
+class UserInformationSerializer(serializers.ModelSerializer):
+
+    ''' 
+    for edit user infos
+    '''
+
+    class Meta:
+        model = User
+        fields = [
+           
+            "first_name",
+            "last_name",
+            "gender",
+            'email'
+
+        ]
+
+class UserAllInformationSerializer(serializers.ModelSerializer):
+
+    ''' 
+      user infos
+    '''
+
+    class Meta:
+        model = User
+        read_only_fields = ['__all__']
+        exclude = ['password', 'user_permissions', 'groups', 'otp_expiry_date', 'otp']
+
 
 class OTPSerializer(serializers.Serializer):
     """
@@ -31,5 +68,12 @@ class CustomTokenSerializer(serializers.Serializer):
     """
 
     token = serializers.CharField(max_length=255, min_length=4, trim_whitespace=True)
+
+class PasswordSerializer(serializers.Serializer):
+    """
+    for verify the token 
+    """
+
+    password = serializers.CharField(max_length=255, min_length=4, trim_whitespace=True)
 
 

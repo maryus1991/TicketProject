@@ -45,4 +45,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('user/api/v1/', include("user.api.v1.urls")),
     path('ticket/', include("ticket.api.v1.urls")),
+    path('site/api/v1/', include("sitesetting.api.v1.urls")),
 ]
