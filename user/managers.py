@@ -39,6 +39,8 @@ class UserManager(DjangoUserManager):
         extra_fields.setdefault("is_superuser", False)
         extra_fields.setdefault("is_active", True)
         extra_fields.setdefault("is_verified", False)
+        extra_fields.setdefault("type_of_user", 'R')
+
         return self._create_user(PhoneNumber, password **extra_fields)
 
     def create_staff_user(self, PhoneNumber, password, **extra_fields):
@@ -46,6 +48,7 @@ class UserManager(DjangoUserManager):
         extra_fields.setdefault("is_superuser", False)
         extra_fields.setdefault("is_active", True)
         extra_fields.setdefault("is_verified", True)
+        extra_fields.setdefault("type_of_user", 'S')
 
         if extra_fields.get("is_staff") is not True:
             raise ValueError("Superuser must have is_staff=True.")
@@ -62,6 +65,7 @@ class UserManager(DjangoUserManager):
         extra_fields.setdefault("is_staff", True)
         extra_fields.setdefault("is_superuser", True)
         extra_fields.setdefault("is_active", True)
+        extra_fields.setdefault("type_of_user", 'A')
         extra_fields.setdefault("is_verified", True)
  
 

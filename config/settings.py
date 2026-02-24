@@ -44,17 +44,21 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.gis',
 
     # third pary apps
     'drf_yasg',
     'rest_framework',
     'rest_framework.authtoken',
     'phonenumber_field',
+    'easy_thumbnails',
     # 'jalali_date',
 
     # apps
     "ticket",
     "user",
+    "orders",
+    "sitesetting",
 ]
 
 AUTH_USER_MODEL = "user.User"
@@ -92,25 +96,34 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
- 
+DATABASES = {
+    "default": {
+        "ENGINE": "django.contrib.gis.db.backends.postgis",
+        "NAME": "postgres",
+        "USER": "postgres",
+        "PASSWORD": "123",
+        "HOST": "localhost",
+        "PORT": "5432",
+    }
+}
  
 # DATABASES = {
 #     "default": {
-#         "ENGINE": os.getenv("POSTGRES_ENGIN"),
-#         "NAME": os.getenv("POSTGRES_DB"),
-#         "USER": os.getenv("POSTGRES_USER"),
-#         "PASSWORD": os.getenv("POSTGRES_PASSWORD"),
-#         "HOST": os.getenv("POSTGRES_HOST", default="postgres"),
-#         "PORT": os.getenv("POSTGRES_PORT", default="5432"),
+#         "ENGINE": "django.contrib.gis.db.backends.postgis",
+#         "NAME": os.getenv("POSTGRES_DB", "postgres"),
+#         "USER": os.getenv("POSTGRES_USER", "postgres"),
+#         "PASSWORD": os.getenv("POSTGRES_PASSWORD", "123"),
+#         "HOST": os.getenv("POSTGRES_HOST", "localhost"),
+#         "PORT": os.getenv("POSTGRES_PORT", "5432"),
 #     }
 # }
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
 
 
 # Password validation

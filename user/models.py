@@ -17,6 +17,13 @@ class GenderOfPassengers(models.TextChoices):
     MALE = "M", 'مذکر'
     FELMALE = "F", "مونث" 
 
+class TypeOfUser(models.TextChoices):
+    """
+    for detact the gender of passengers 
+    """
+    REGULAR = "R", 'عادی'
+    SALON = "S", "سالون دار" 
+    ADMIN = "A", "ادمین" 
 
 class User(AbstractUser):
     """
@@ -27,6 +34,7 @@ class User(AbstractUser):
     PhoneNumber = PhoneNumberField(unique=True, db_index=True, verbose_name="شماره")
     otp = models.CharField(max_length=6, blank=True, null=True, verbose_name="کد otp")
     otp_expiry_date = models.DateTimeField(null=True, blank=True, verbose_name="تاریخ انقضای ")
+    type_of_user = models.CharField(max_length=255, choices=TypeOfUser, verbose_name='نوع کاربر', default=TypeOfUser.REGULAR)
 
     is_active = models.BooleanField(default=True, verbose_name='فعال بودن')
     is_verified = models.BooleanField(default=True, verbose_name='تایید اطلاعات')
@@ -34,9 +42,14 @@ class User(AbstractUser):
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='زمان ثبت نام')
     
     USERNAME_FIELD = "PhoneNumber"
-    EMAIL_FIELD = "PhoneNumber"
+    username = None
 
     objects = UserManager()
+
+
+    class Meta:
+        verbose_name = 'کاربر'
+        verbose_name_plural = 'کاربران'
 
     def __str__(self):
         return f"{str(self.PhoneNumber).replace(' ', '')}"

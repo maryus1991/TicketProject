@@ -1,5 +1,7 @@
 from django.contrib import admin
-from .models import Ticket, PassengerPlacement
+from .models import Salon, SalonGallery, SalonTicket, TicketCategory
 
-admin.site.register(Ticket)
-admin.site.register(PassengerPlacement)
+admin.site.register(Salon)
+admin.site.register(SalonGallery)
+admin.site.register(SalonTicket)
+admin.site.register(TicketCategory)
