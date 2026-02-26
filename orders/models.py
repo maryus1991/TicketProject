@@ -17,10 +17,10 @@ class OrderStatus(models.TextChoices):
 
 
 class Order(models.Model):
-    salon = models.ForeignKey(Salon, on_delete=models.CASCADE, verbose_name='سالون')
-    user = models.ForeignKey(User, verbose_name='کاربر', on_delete=models.Case)
+    salon = models.ForeignKey(Salon, on_delete=models.CASCADE, verbose_name='سالون', related_name='orders')
+    user = models.ForeignKey(User, verbose_name='کاربر', on_delete=models.PROTECT)
     wallet = models.ForeignKey('UserWallet', verbose_name='کیف پول', on_delete=models.PROTECT)
-    ticket = models.ForeignKey(SalonTicket, verbose_name='بلیت', on_delete=models.SET_NULL, null=True)
+    ticket = models.ForeignKey(SalonTicket, verbose_name='بلیت', on_delete=models.SET_NULL, null=True, related_name='orders')
     create_at = models.DateTimeField(auto_now_add=True, verbose_name='تاریخ افزودن')
     paid_at = models.DateTimeField(null=True, blank=True, verbose_name='تایخ پرداخت')
     status = models.CharField(verbose_name='وضعیت', choices=OrderStatus, default=OrderStatus.awaitingـpayment, max_length=255)

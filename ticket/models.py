@@ -29,7 +29,7 @@ class Salon(models.Model):
     Tickets Model
     """
     
-    admin = models.ForeignKey(User, verbose_name='ادمین', on_delete=models.SET_NULL, null=True)
+    admin = models.OneToOneField(User, verbose_name='ادمین', on_delete=models.SET_NULL, null=True, related_name='salon')
     name = models.CharField(max_length=255, verbose_name='نام سالون')
     address = models.TextField(verbose_name='ادرس')
     logo = ThumbnailerImageField(upload_to=photo_path_upload_to, verbose_name='لوگو')
@@ -42,6 +42,7 @@ class Salon(models.Model):
     location = PointField(verbose_name='موقعیت', null=True, blank=True)
     is_active = models.BooleanField(default=True, verbose_name='وضعیت')
     sort_number = models.PositiveSmallIntegerField(default=0, verbose_name='عدد اولویت بندی (هر چه بزرگتر بالاتر نمایش داده می شود)')
+    accept_ticket_cancelling = models.BooleanField(default=True, verbose_name='قبول کردن کنسل کردن بعد پرداخت')
 
     class Meta:
         verbose_name = 'سالون '

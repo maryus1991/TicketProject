@@ -205,7 +205,7 @@ class ChangePasswordAuthenticatedUser(GenericAPIView):
 
         return response.Response('the password has been changed', status=status.HTTP_200_OK)
 
-    
+  
 
         
 

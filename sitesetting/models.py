@@ -16,6 +16,8 @@ class Site(models.Model):
     description = models.TextField(verbose_name='توضیحات')
     support_phone_number = PhoneNumberField(verbose_name='شماره تلفن پشتیبان')
     site_tax = models.PositiveSmallIntegerField(verbose_name='مالیات زیر ساخت')
+    minutes_to_allow_cancelling_the_order = models.PositiveSmallIntegerField(default=10, verbose_name='دقیقه برای اجازه کنسل کردن سفارش')
+    minutes_to_allow_cancelling_the_order_after_payment = models.PositiveSmallIntegerField(default=120, verbose_name=' دقیقه برای اجازه کنسل کردن سفارش بعد از پرداخت')
 
     class Meta:
         verbose_name = 'تنظیمات سایت'

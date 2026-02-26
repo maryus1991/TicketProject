@@ -22,6 +22,7 @@ class SalonGalleryModelSerializers(serializers.ModelSerializer):
         model = SalonGallery
         fields = '__all__'
 
+
 class SalonModelSerializers(serializers.ModelSerializer):
     """
     serializer for salon 
@@ -33,9 +34,36 @@ class SalonModelSerializers(serializers.ModelSerializer):
         model = Salon
         fields = '__all__'
 
+class SalonUpdateModelSerializers(serializers.ModelSerializer):
+    """
+    serializer for update salon 
+    """
+    
+    class Meta:
+        model = Salon
+        fields = [
+            'name',
+            'address',
+            'logo',
+            'description',
+            'support_phone_number',
+            'create_at',
+            'working_hours_start',
+            'working_hours_end',
+            'accepted_gender',
+            'location',
+            'is_active',
+            'sort_number',
+            'accept_ticket_cancelling',
+        ]
+
+    def update(self, instance, validated_data):
+        validated_data.update({
+            'admin': self.context['request'].user
+        })
+        instance.admin = self.context['request'].user
+        return super().update(instance, validated_data)
  
-
-
 class SalonTicketModelSerializers(serializers.ModelSerializer):
     """
     serializer for ticket 
