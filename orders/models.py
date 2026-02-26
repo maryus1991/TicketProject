@@ -19,13 +19,13 @@ class OrderStatus(models.TextChoices):
 class Order(models.Model):
     salon = models.ForeignKey(Salon, on_delete=models.CASCADE, verbose_name='سالون')
     user = models.ForeignKey(User, verbose_name='کاربر', on_delete=models.Case)
+    wallet = models.ForeignKey('UserWallet', verbose_name='کیف پول', on_delete=models.PROTECT)
     ticket = models.ForeignKey(SalonTicket, verbose_name='بلیت', on_delete=models.SET_NULL, null=True)
     create_at = models.DateTimeField(auto_now_add=True, verbose_name='تاریخ افزودن')
     paid_at = models.DateTimeField(null=True, blank=True, verbose_name='تایخ پرداخت')
     status = models.CharField(verbose_name='وضعیت', choices=OrderStatus, default=OrderStatus.awaitingـpayment, max_length=255)
     price = models.PositiveBigIntegerField(verbose_name='قیمت تاریخ چه', null=True, blank=True)
     payment_code = models.PositiveBigIntegerField(verbose_name='کد پیگیری', null=True, blank=True)
-    wallet = models.ForeignKey('UserWallet', verbose_name='کیف پول', on_delete=models.PROTECT)
 
     class Meta:
         verbose_name = 'سفارش'
@@ -40,8 +40,8 @@ class WalletStatus(models.TextChoices):
     paid = 'paid', 'پرداخت شده'
 
 class UserWallet(models.Model):
-    user = models.ForeignKey(User, verbose_name='کاربر', on_delete=models.PROTECT)
-    price = models.PositiveBigIntegerField(verbose_name='قیمت')
+    user = models.ForeignKey(User, verbose_name='کاربر', on_delete=models.PROTECT, related_name='wallet')
+    price = models.PositiveBigIntegerField(verbose_name='قیمت', default=0)
     status = models.CharField(max_length=255, choices=WalletStatus, default=WalletStatus.awaiting, verbose_name='وضعیت') 
 
     def __str__(self): return f'{str(self.user.PhoneNumber).replace(" ","")}'
@@ -61,6 +61,7 @@ class Advertising(models.Model):
     link = models.CharField(max_length=1000, verbose_name='لینک')
     image = ThumbnailerImageField(upload_to=photo_path_upload_to, verbose_name='عکس')
     description = models.TextField(verbose_name='توضیحات')
+    is_active=models.BooleanField(default=True, verbose_name='وضعیت')
 
     class Meta:
         verbose_name = 'تبلیغ'

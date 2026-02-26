@@ -41,6 +41,7 @@ class Salon(models.Model):
     accepted_gender = models.CharField(verbose_name='جنسیت مورد قبول', choices=SalonGenderAccept) 
     location = PointField(verbose_name='موقعیت', null=True, blank=True)
     is_active = models.BooleanField(default=True, verbose_name='وضعیت')
+    sort_number = models.PositiveSmallIntegerField(default=0, verbose_name='عدد اولویت بندی (هر چه بزرگتر بالاتر نمایش داده می شود)')
 
     class Meta:
         verbose_name = 'سالون '
@@ -54,10 +55,12 @@ def salon_gallery_photo_path_upload_to(instance, filename):
     basename = os.path.basename(filename)
     return f"galley/salon/{get_random_string(100)}-{basename}"
 
+
 class SalonGallery(models.Model):
     image = ThumbnailerImageField(upload_to=salon_gallery_photo_path_upload_to, verbose_name='عکس')
+    sort_number = models.PositiveSmallIntegerField(default=0, verbose_name='عدد اولویت بندی (هر چه بزرگتر بالاتر نمایش داده می شود)')
     is_active = models.BooleanField(default=True, verbose_name='وضعیت')
-
+    salon = models.ForeignKey(Salon, on_delete=models.CASCADE, related_name='gallery')
 
     class Meta:
         verbose_name = 'عکس '
@@ -75,6 +78,8 @@ class TicketCategory(models.Model):
     name = models.CharField(max_length=255, verbose_name='نام دسته')
     logo = ThumbnailerImageField(upload_to=category_photo_path_upload_to, verbose_name='لوگو')
     is_active = models.BooleanField(default=True, verbose_name='وضعیت')
+    sort_number = models.PositiveSmallIntegerField(default=0, verbose_name='عدد اولویت بندی (هر چه بزرگتر بالاتر نمایش داده می شود)')
+
 
     class Meta:
         verbose_name = 'دسته '
@@ -90,9 +95,12 @@ class SalonTicket(models.Model):
     is_active = models.BooleanField(default=True, verbose_name='وضعیت')
     accepted_gender = models.CharField(verbose_name='جنسیت مورد قبول', choices=SalonGenderAccept) 
     working_datetime_start = models.DateTimeField(verbose_name='شروع ساعت کاری ') 
+ 
     price = models.PositiveBigIntegerField(verbose_name='قیمت')
     capacity = models.PositiveSmallIntegerField(verbose_name='ظرفیت', default=1)
+    current_capacity = models.PositiveSmallIntegerField(verbose_name=' فعلی ظرفیت', default=1)
     name = models.CharField(max_length=255, verbose_name='نام')
+    sort_number = models.PositiveSmallIntegerField(default=0, verbose_name='عدد اولویت بندی (هر چه بزرگتر بالاتر نمایش داده می شود)')
 
     class Meta:
         verbose_name = 'بلیت '

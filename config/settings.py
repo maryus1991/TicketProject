@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'phonenumber_field',
     'easy_thumbnails',
+    'django_filters',
     # 'jalali_date',
 
     # apps
@@ -165,6 +166,8 @@ USE_I18N = True
 TIME_ZONE = "Asia/Tehran"
 USE_TZ = True
 
+LOGIN_URL = '/'
+LOGOUT_URL = '/logout/'
 # otp 
 KAVEH_NEGAR_OTP = os.getenv('KAVEH_NEGAR_OTP')
 OTP_EXPIRATIONS_MINUTES = int(os.getenv('OTP_EXPIRATIONS_MINUTES', default=2))

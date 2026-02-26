@@ -1,6 +1,7 @@
 from django.urls import path
 from .views import ContactView, SiteView, TeamView
 
+app_name='site'
 
 urlpatterns = [
     path('site/', SiteView.as_view()),

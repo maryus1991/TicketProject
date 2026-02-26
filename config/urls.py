@@ -35,6 +35,7 @@ schema_view = get_schema_view(
    permission_classes=(permissions.AllowAny,),
 )
 
+ 
 
 urlpatterns = [
 
@@ -44,6 +45,7 @@ urlpatterns = [
     
     path('admin/', admin.site.urls),
     path('user/api/v1/', include("user.api.v1.urls")),
-    path('ticket/', include("ticket.api.v1.urls")),
+    path('tickets/api/v1/', include("ticket.api.v1.urls")),
     path('site/api/v1/', include("sitesetting.api.v1.urls")),
+    path('orders/api/v1/', include("orders.api.v1.urls")),
 ]
